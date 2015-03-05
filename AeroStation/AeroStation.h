@@ -103,6 +103,9 @@ typedef struct // 28 bytes
   int tilt_maxpwm;
   int tilt_maxangle;
   byte baudrate;
+  long latitude;
+  long longitud;
+  int  altitude;
   //    int telemetry;
   //    int bearing;
   //    uint8_t osd_enabled;
@@ -127,13 +130,34 @@ boolean telemetry_ok=false;
 const long baudrates[8]= {
   1200, 2400, 4800, 9600, 19200, 38400, BAUDRATE56K, 115200};
 
-
 #define GET_NVR_OFFSET(param) ((int)&(((t_CONFIG*) 0)->param))
+#define NVR_WRITE(param,value) writeEEPROM(GET_NVR_OFFSET(param),value)
+#define NVR_READ(param,value) readEEPROM(GET_NVR_OFFSET(param),value)
 
-void writeEEPROM(int address, int value) {
+void writeEEPROM(unsigned int address, byte value) {
 #ifdef DEBUG_EEPROM
-  SERIAL_PRINT("W ADDR: ");
+  SERIAL_PRINT("Wb ADDR: ");
   SERIAL_PRINT(address, HEX);
+  SERIAL_PRINT(" (");
+  SERIAL_PRINT(sizeof(value));
+  SERIAL_PRINT(") ");
+  SERIAL_PRINT(" VALUE: ");
+  SERIAL_PRINT(value);
+  SERIAL_PRINT(" 0x");
+  SERIAL_PRINTLN(value, HEX);
+#endif
+  cli();
+  EEPROM.write(address,  ((value >> 8*0) & 0xFF));
+  sei();
+}
+
+void writeEEPROM(unsigned int address, int value) {
+#ifdef DEBUG_EEPROM
+  SERIAL_PRINT("Wi ADDR: ");
+  SERIAL_PRINT(address, HEX);
+  SERIAL_PRINT(" (");
+  SERIAL_PRINT(sizeof(value));
+  SERIAL_PRINT(") ");
   SERIAL_PRINT(" VALUE: ");
   SERIAL_PRINT(value);
   SERIAL_PRINT(" 0x");
@@ -145,13 +169,55 @@ void writeEEPROM(int address, int value) {
   sei();
 }
 
-int readEEPROMInt(int address){
+void writeEEPROM( unsigned int address, long value) {
 #ifdef DEBUG_EEPROM
-  SERIAL_PRINT("R ADDR: ");
+  SERIAL_PRINT("Wl ADDR: ");
   SERIAL_PRINT(address, HEX);
+  SERIAL_PRINT(" (");
+  SERIAL_PRINT(sizeof(value));
+  SERIAL_PRINT(") ");
+  SERIAL_PRINT(" VALUE: ");
+  SERIAL_PRINT(value);
+  SERIAL_PRINT(" 0x");
+  SERIAL_PRINTLN(value, HEX);
 #endif
   cli();
-  int value =  EEPROM.read(address);
+  EEPROM.write(address,  ((value >> 8*0) & 0xFF));
+  EEPROM.write(address+1, ((value >> 8*1) & 0xFF));
+  EEPROM.write(address+2, ((value >> 8*2) & 0xFF));
+  EEPROM.write(address+3, ((value >> 8*3) & 0xFF));
+  sei();
+}
+
+void readEEPROM(unsigned int address, byte &value){
+#ifdef DEBUG_EEPROM
+  SERIAL_PRINT("Rb ADDR: ");
+  SERIAL_PRINT(address, HEX);
+  SERIAL_PRINT(" (");
+  SERIAL_PRINT(sizeof(value));
+  SERIAL_PRINT(") ");
+#endif
+  cli();
+  value =  EEPROM.read(address);
+  sei();
+#ifdef DEBUG_EEPROM
+  SERIAL_PRINT(" VALUE: ");
+  SERIAL_PRINT(value);
+  SERIAL_PRINT(" 0x");
+  SERIAL_PRINTLN(value, HEX);
+#endif
+}
+
+void readEEPROM(unsigned int address, int &value){
+#ifdef DEBUG_EEPROM
+  SERIAL_PRINT("Ri ADDR: ");
+  SERIAL_PRINT(address, HEX);
+  SERIAL_PRINT(" (");
+  SERIAL_PRINT(sizeof(value));
+  SERIAL_PRINT(") ");
+#endif
+  cli();
+  value =  EEPROM.read(address);
   value |= EEPROM.read(address+1)<<8;
   sei();
 #ifdef DEBUG_EEPROM
@@ -160,10 +226,53 @@ int readEEPROMInt(int address){
   SERIAL_PRINT(" 0x");
   SERIAL_PRINTLN(value, HEX);
 #endif
-  return value;
 }
 
+void readEEPROM(unsigned int address, long &value){
+#ifdef DEBUG_EEPROM
+  SERIAL_PRINT("Rl ADDR: ");
+  SERIAL_PRINT(address, HEX);
+  SERIAL_PRINT(" (");
+  SERIAL_PRINT(sizeof(value));
+  SERIAL_PRINT(") ");
+#endif
+  cli();
+  value =  EEPROM.read(address);
+  value |= EEPROM.read(address+1)<<8;
+  value |= EEPROM.read(address+2)<<16;
+  value |= EEPROM.read(address+3)<<24;
+  sei();
+#ifdef DEBUG_EEPROM
+  SERIAL_PRINT(" VALUE: ");
+  SERIAL_PRINT(value);
+  SERIAL_PRINT(" 0x");
+  SERIAL_PRINTLN(value, HEX);
+#endif
+}
+
+
+//int readEEPROMInt(int address){
+//#ifdef DEBUG_EEPROM
+//  SERIAL_PRINT("R ADDR: ");
+//  SERIAL_PRINT(address, HEX);
+//#endif
+//  cli();
+//  int value =  EEPROM.read(address);
+//  value |= EEPROM.read(address+1)<<8;
+//  sei();
+//#ifdef DEBUG_EEPROM
+//  SERIAL_PRINT(" VALUE: ");
+//  SERIAL_PRINT(value);
+//  SERIAL_PRINT(" 0x");
+//  SERIAL_PRINTLN(value, HEX);
+//#endif
+//  return value;
+//}
+
 void defaultConfiguration() {
+#ifdef DEBUG_CONFIG
+  SERIAL_PRINTLN("Set default configuration");
+#endif
   cnf.config_crc = DEF_CONFIGCRC;
   //PAN
   cnf.pan_minpwm = DEF_PANMINPWM;
@@ -185,16 +294,24 @@ void saveConfiguration(){
   SERIAL_PRINTLN("=====EEPROM W=====");
 #endif
 
-  writeEEPROM(GET_NVR_OFFSET(config_crc),cnf.config_crc);
-  writeEEPROM(GET_NVR_OFFSET(pan_minpwm),cnf.pan_minpwm);
-  writeEEPROM(GET_NVR_OFFSET(pan_minangle),cnf.pan_minangle);
-  writeEEPROM(GET_NVR_OFFSET(pan_maxpwm),cnf.pan_maxpwm);
-  writeEEPROM(GET_NVR_OFFSET(pan_maxangle),cnf.pan_maxangle);
+  NVR_WRITE(config_crc,cnf.config_crc);
 
-  writeEEPROM(GET_NVR_OFFSET(tilt_minpwm),cnf.tilt_minpwm);
-  writeEEPROM(GET_NVR_OFFSET(tilt_minangle),cnf.tilt_minangle);
-  writeEEPROM(GET_NVR_OFFSET(tilt_maxpwm),cnf.tilt_maxpwm);
-  writeEEPROM(GET_NVR_OFFSET(tilt_maxangle),cnf.tilt_maxangle);
+
+  NVR_WRITE(pan_minpwm,cnf.pan_minpwm);
+  NVR_WRITE(pan_minangle,cnf.pan_minangle);
+  NVR_WRITE(pan_maxpwm,cnf.pan_maxpwm);
+  NVR_WRITE(pan_maxangle,cnf.pan_maxangle);
+
+  NVR_WRITE(tilt_minpwm,cnf.tilt_minpwm);
+  NVR_WRITE(tilt_minangle,cnf.tilt_minangle);
+  NVR_WRITE(tilt_maxpwm,cnf.tilt_maxpwm);
+  NVR_WRITE(tilt_maxangle,cnf.tilt_maxangle);
+
+  NVR_WRITE(baudrate,cnf.baudrate);
+
+  NVR_WRITE(latitude,home.latitude);
+  NVR_WRITE(longitud,home.longitud);
+  NVR_WRITE(altitude,home.altitude);
 }
 
 void resetConfiguration() {
@@ -204,22 +321,31 @@ void resetConfiguration() {
 
 void readConfiguration(){
 
-  cnf.config_crc = readEEPROMInt(GET_NVR_OFFSET(config_crc));
-
+  //cnf.config_crc = readEEPROMInt(GET_NVR_OFFSET(config_crc));
+  NVR_READ(config_crc,cnf.config_crc);
   if(cnf.config_crc!=DEF_CONFIGCRC){
-    defaultConfiguration();
-    saveConfiguration();
+#ifdef DEBUG_CONFIG
+    SERIAL_PRINTLN("Config crc not mached");
+#endif
+    resetConfiguration();
   }
   else{
-    cnf.pan_minpwm = readEEPROMInt(GET_NVR_OFFSET(pan_minpwm));
-    cnf.pan_minangle = readEEPROMInt(GET_NVR_OFFSET(pan_minangle));
-    cnf.pan_maxpwm = readEEPROMInt(GET_NVR_OFFSET(pan_maxpwm));
-    cnf.pan_maxangle = readEEPROMInt(GET_NVR_OFFSET(pan_maxangle));
 
-    cnf.tilt_minpwm = readEEPROMInt(GET_NVR_OFFSET(tilt_minpwm));
-    cnf.tilt_minangle = readEEPROMInt(GET_NVR_OFFSET(tilt_minangle));
-    cnf.tilt_maxpwm = readEEPROMInt(GET_NVR_OFFSET(tilt_maxpwm));
-    cnf.tilt_maxangle = readEEPROMInt(GET_NVR_OFFSET(tilt_maxangle));
+    NVR_READ(pan_minpwm,cnf.pan_minpwm);
+    NVR_READ(pan_minangle,cnf.pan_minangle);
+    NVR_READ(pan_maxpwm,cnf.pan_maxpwm);
+    NVR_READ(pan_maxangle,cnf.pan_maxangle);
+
+    NVR_READ(tilt_minpwm,cnf.tilt_minpwm);
+    NVR_READ(tilt_minangle,cnf.tilt_minangle);
+    NVR_READ(tilt_maxpwm,cnf.tilt_maxpwm);
+    NVR_READ(tilt_maxangle,cnf.tilt_maxangle);
+
+    NVR_READ(baudrate,cnf.baudrate);
+
+    NVR_READ(latitude,home.latitude);
+    NVR_READ(longitud,home.longitud);
+    NVR_READ(altitude,home.altitude);
   }
 
 
@@ -305,6 +431,14 @@ void debug() {
 #endif
 
 #endif
+
+
+
+
+
+
+
+
 
 
 
