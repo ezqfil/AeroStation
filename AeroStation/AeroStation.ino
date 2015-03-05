@@ -1,11 +1,10 @@
 #include <Arduino.h>
 #include <EEPROM.h>
 #include "UserConfiguration.h"
-#include "AeroStation.h"
-
 #ifdef DEBUG
 #include <MemoryFree.h>
 #endif
+#include "AeroStation.h"
 
 #include <Servo.h>
 #include "Traker.h"
