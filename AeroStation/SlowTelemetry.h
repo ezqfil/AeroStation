@@ -207,7 +207,7 @@ void updateSlowTelemetry () {
 
   byte c;
 
-#ifdef DEBUG_TELEMETRY
+#ifdef DEBUG_SLOWTELEMETRY
   boolean ln = false;
   if(TELEMETRY_AVAILABLE()){
     SERIAL_PORT.println("=====SlowTelemetry MSG=====");
@@ -295,7 +295,7 @@ void updateSlowTelemetry () {
 
   }
 
-#ifdef DEBUG_TELEMETRY
+#ifdef DEBUG_SLOWTELEMETRY
   if (ln) {
     SERIAL_PORT.println("");
   }
