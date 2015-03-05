@@ -8,17 +8,17 @@ void smnBaudrate(){
     uiStatus.state++;
     change=true;
   }
-  else if(uiStatus.action==50) {
+  else if(uiStatus.action==BTN_MINUS) {
     cnf.baudrate--;
     cnf.baudrate = constrain( cnf.baudrate,0,7);
     change=true;
   } 
-  else if( uiStatus.action==51) {
+  else if( uiStatus.action==BTN_PLUS) {
     cnf.baudrate++;
     cnf.baudrate = constrain( cnf.baudrate,0,7);
     change=true;
   }
-  else if( uiStatus.action==52 || uiStatus.action==49) {
+  else if( uiStatus.action==BTN_OK || uiStatus.action==BTN_MENU) {
     uiStatus.event=mnuConfig;
   }    
 
@@ -51,42 +51,42 @@ void smnServos(){
     uiStatus.state=1;
     change=true;
   }
-  else if(uiStatus.action==52){
+  else if(uiStatus.action==BTN_OK){
     uiStatus.state++;
     change=true;
   }
-  else if(uiStatus.action==49){
+  else if(uiStatus.action==BTN_MENU){
     uiStatus.event = mnuConfig;
   }
-  else if(uiStatus.state==1 && uiStatus.action==50){
+  else if(uiStatus.state==1 && uiStatus.action==BTN_MINUS){
     cnf.pan_minpwm--;
     change=true;
   } 
-  else if(uiStatus.state==1 && uiStatus.action==51){
+  else if(uiStatus.state==1 && uiStatus.action==BTN_PLUS){
     cnf.pan_minpwm++;
     change=true;
   } 
-  else if(uiStatus.state==2 && uiStatus.action==50){
+  else if(uiStatus.state==2 && uiStatus.action==BTN_MINUS){
     cnf.pan_maxpwm--;
     change=true;
   } 
-  else if(uiStatus.state==2 && uiStatus.action==51){
+  else if(uiStatus.state==2 && uiStatus.action==BTN_PLUS){
     cnf.pan_maxpwm++;
     change=true;
   } 
-  else if(uiStatus.state==3 && uiStatus.action==50){
+  else if(uiStatus.state==3 && uiStatus.action==BTN_MINUS){
     cnf.pan_minangle--;
     change=true;
   } 
-  else if(uiStatus.state==3 && uiStatus.action==51){
+  else if(uiStatus.state==3 && uiStatus.action==BTN_PLUS){
     cnf.pan_minangle++;
     change=true;
   } //16906
-  else if(uiStatus.state==4 && uiStatus.action==50){
+  else if(uiStatus.state==4 && uiStatus.action==BTN_MINUS){
     cnf.pan_maxangle--;
     change=true;
   } 
-  else if(uiStatus.state==4 && uiStatus.action==51){
+  else if(uiStatus.state==4 && uiStatus.action==BTN_PLUS){
     cnf.pan_maxangle++;
     change=true;
   }  
@@ -131,7 +131,7 @@ void smnServos(){
     }
     uiStatus.statePrevius=uiStatus.state;
   }
-  
+
 }
 
 void smnSetHome(){
@@ -144,11 +144,11 @@ void smnSetHome(){
     SERIAL_PRINT("->Confirm?");
     uiStatus.state++;
   } 
-  if( uiStatus.action==52) {
+  if( uiStatus.action==BTN_OK) {
     saveHomePosition();
     uiStatus.event = mnuData;
   }
-  else if( uiStatus.action==49) {
+  else if( uiStatus.action==BTN_MENU) {
     uiStatus.event = mnuConfig;
   }
 }
@@ -156,15 +156,15 @@ void smnSetHome(){
 void mnuConfig(){
   if(uiStatus.state==0){
     uiStatus.state=1;
-  }
+  }//2264
   else 
-    if(uiStatus.action==50){
+    if(uiStatus.action==BTN_MINUS && uiStatus.state>1){
     uiStatus.state--;
-    uiStatus.state = constrain(uiStatus.state,1,6);
+    //uiStatus.state = constrain(uiStatus.state,1,6);
   } 
-  else if(uiStatus.action==51){
+  else if(uiStatus.action==BTN_PLUS && uiStatus.state<6){
     uiStatus.state++;
-    uiStatus.state = constrain(uiStatus.state,1,6);
+    //uiStatus.state = constrain(uiStatus.state,1,6);
   } 
 
   if(uiStatus.state!=uiStatus.statePrevius) {
@@ -203,28 +203,28 @@ void mnuConfig(){
     uiStatus.statePrevius=uiStatus.state;
   }  
 
-  if(uiStatus.state==1 && uiStatus.action==52) {
+  if(uiStatus.state==1 && uiStatus.action==BTN_OK) {
     uiStatus.event=smnSetHome;
   } 
-  else if(uiStatus.state==3 && uiStatus.action==52) {
+  else if(uiStatus.state==3 && uiStatus.action==BTN_OK) {
     uiStatus.event = smnServos;
     //return;
   }  
-  else if(uiStatus.state==4 && uiStatus.action==52) {
+  else if(uiStatus.state==4 && uiStatus.action==BTN_OK) {
     resetConfiguration();
     //uiStatus.state=4;
     //return;
   }  
-  else if(uiStatus.state==5 && uiStatus.action==52) {
+  else if(uiStatus.state==5 && uiStatus.action==BTN_OK) {
     saveConfiguration();
-   // uiStatus.state=5;
-   // return;
+    // uiStatus.state=5;
+    // return;
   }  
-  else if(uiStatus.state==6 && uiStatus.action==52) {
+  else if(uiStatus.state==6 && uiStatus.action==BTN_OK) {
     uiStatus.event=smnBaudrate;
     //return; 
   } 
-  else if(uiStatus.action==49){
+  else if(uiStatus.action==BTN_MENU){
     uiStatus.event = mnuMain;
   } 
 
@@ -232,6 +232,7 @@ void mnuConfig(){
 }
 
 #endif
+
 
 
 

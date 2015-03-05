@@ -5,14 +5,14 @@ void mnuData(){
 
   if(uiStatus.state==0){
     uiStatus.state=1;
-  }
-  else if(uiStatus.action==50){
+  }//22266
+  else if(uiStatus.action==BTN_MINUS && uiStatus.state>1){
     uiStatus.state--;
-    uiStatus.state = constrain(uiStatus.state,1,3);
+    //uiStatus.state = constrain(uiStatus.state,1,3);
   } 
-  else if(uiStatus.action==51){ 
+  else if(uiStatus.action==BTN_PLUS && uiStatus.state<3){ 
     uiStatus.state++;
-    uiStatus.state = constrain(uiStatus.state,1,3);
+    //uiStatus.state = constrain(uiStatus.state,1,3);
   } 
 
   if(uiStatus.state!=uiStatus.statePrevius) {
@@ -61,7 +61,7 @@ void mnuData(){
     uiStatus.statePrevius=uiStatus.state;
   }
 
-  if(uiStatus.action==49){
+  if(uiStatus.action==BTN_MENU){
     uiStatus.event = mnuMain;
   } 
 

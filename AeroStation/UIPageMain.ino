@@ -3,40 +3,39 @@
 
 
 void mnuMain(void)
-{
+{//2268
   if(uiStatus.state==0){
     uiStatus.state=1;
   }
-  else if(uiStatus.action==50){ 
+  else if(uiStatus.action==BTN_MINUS && uiStatus.state>1){ 
     uiStatus.state--;
-    uiStatus.state = constrain(uiStatus.state,1,3);
+    //uiStatus.state = constrain(uiStatus.state,1,3);
   } 
-  else if(uiStatus.action==51){
+  else if(uiStatus.action==BTN_PLUS && uiStatus.state<3){
     uiStatus.state++;
-    uiStatus.state = constrain(uiStatus.state,1,3);
+    //uiStatus.state = constrain(uiStatus.state,1,3);
   } 
 
   if(uiStatus.state!=uiStatus.statePrevius) {
     if(uiStatus.state==1){
       SERIAL_PRINTLN("1 -> Data");
       SERIAL_PRINTLN("2    Config");
-      SERIAL_PRINTLN("3    Test telemetry");
+      SERIAL_PRINTLN("3    Test");
     } 
     else if(uiStatus.state==2){
       SERIAL_PRINTLN("1    Data");
       SERIAL_PRINTLN("2 -> Config");
-      SERIAL_PRINTLN("3    Test telemetry");
+      SERIAL_PRINTLN("3    Test");
+    } 
+    else if(uiStatus.state==3 ){
+      SERIAL_PRINTLN("1    Data");
+      SERIAL_PRINTLN("2    Config");
+      SERIAL_PRINTLN("3 -> Test");
     }
-    else
-      if(uiStatus.state==3 ){
-        SERIAL_PRINTLN("1    Data");
-        SERIAL_PRINTLN("2    Config");
-        SERIAL_PRINTLN("3 -> Test telemetry");
-      }
     uiStatus.statePrevius=uiStatus.state;
   }
 
-  if(uiStatus.action==52 ){
+  if(uiStatus.action==BTN_OK ){
     if(uiStatus.state==1){
       uiStatus.event = mnuData;
     } 
@@ -51,7 +50,7 @@ void mnuMain(void)
 #endif
     } 
   }
-  else if(uiStatus.action==49){
+  else if(uiStatus.action==BTN_MENU){
     uiStatus.event = mnuData;
   } 
 
@@ -59,6 +58,8 @@ void mnuMain(void)
 }
 
 #endif
+
+
 
 
 

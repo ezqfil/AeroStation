@@ -5,13 +5,13 @@ void mnuTelemetryTest(void){
   if(uiStatus.state==0){
     uiStatus.state=1;
   }
-  else if(uiStatus.action==50){
+  else if(uiStatus.action==BTN_MINUS && uiStatus.state>1){
     uiStatus.state--; 
-    uiStatus.state = constrain(uiStatus.state,1,4);
+    //uiStatus.state = constrain(uiStatus.state,1,4);
   } 
-  else if(uiStatus.action==51){
+  else if(uiStatus.action==BTN_PLUS && uiStatus.state<4){
     uiStatus.state++;
-    uiStatus.state = constrain(uiStatus.state,1,4);
+    //uiStatus.state = constrain(uiStatus.state,1,4);
   } 
 
   if(uiStatus.state!=uiStatus.statePrevius) {
@@ -42,7 +42,7 @@ void mnuTelemetryTest(void){
     uiStatus.statePrevius=uiStatus.state;
   }
 
-  if(uiStatus.action==52) {
+  if(uiStatus.action==BTN_OK) {
     if(uiStatus.state==1 ){
       initializeAQTelemetry();
       //slowTelemetryByte=255;
@@ -66,7 +66,7 @@ void mnuTelemetryTest(void){
       //    readTelemetryByte=0;
     } 
   }
-  else if(uiStatus.action==49){
+  else if(uiStatus.action==BTN_MENU){
     uiStatus.event = mnuMain;
   } 
 }

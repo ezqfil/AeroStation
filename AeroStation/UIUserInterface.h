@@ -1,10 +1,10 @@
 #ifndef _AS_UI_H_
 #define _AS_UI_H_
 
-#define BTN_MENU = 49
-#define BTN_MINUS = 50
-#define BTN_PLUS = 51
-#define BTN_OK = 52
+#define BTN_MENU  49
+#define BTN_MINUS  50
+#define BTN_PLUS  51
+#define BTN_OK 52
 
 //Variables:
 typedef void (*FuncPtr)(void);
