@@ -217,8 +217,9 @@ void readEEPROM(unsigned int address, int &value){
   SERIAL_PRINT(") ");
 #endif
   cli();
-  value =  EEPROM.read(address);
-  value |= EEPROM.read(address+1)<<8;
+    byte* p = (byte*)(void*)&value;
+    for (int i = 0; i < sizeof(value); i++)
+          *p++ = EEPROM.read(address++);
   sei();
 #ifdef DEBUG_EEPROM
   SERIAL_PRINT(" VALUE: ");
@@ -236,11 +237,10 @@ void readEEPROM(unsigned int address, long &value){
   SERIAL_PRINT(sizeof(value));
   SERIAL_PRINT(") ");
 #endif
-  cli();
-  value =  EEPROM.read(address);
-  value |= EEPROM.read(address+1)<<8;
-  value |= EEPROM.read(address+2)<<16;
-  value |= EEPROM.read(address+3)<<24;
+  cli();//20172
+    byte* p = (byte*)(void*)&value;
+    for (int i = 0; i < sizeof(value); i++)
+          *p++ = EEPROM.read(address++);
   sei();
 #ifdef DEBUG_EEPROM
   SERIAL_PRINT(" VALUE: ");
@@ -249,25 +249,6 @@ void readEEPROM(unsigned int address, long &value){
   SERIAL_PRINTLN(value, HEX);
 #endif
 }
-
-
-//int readEEPROMInt(int address){
-//#ifdef DEBUG_EEPROM
-//  SERIAL_PRINT("R ADDR: ");
-//  SERIAL_PRINT(address, HEX);
-//#endif
-//  cli();
-//  int value =  EEPROM.read(address);
-//  value |= EEPROM.read(address+1)<<8;
-//  sei();
-//#ifdef DEBUG_EEPROM
-//  SERIAL_PRINT(" VALUE: ");
-//  SERIAL_PRINT(value);
-//  SERIAL_PRINT(" 0x");
-//  SERIAL_PRINTLN(value, HEX);
-//#endif
-//  return value;
-//}
 
 void defaultConfiguration() {
 #ifdef DEBUG_CONFIG
@@ -377,55 +358,55 @@ void debug() {
   Serial.print("mem ");
   int freememory = freeMem();
   Serial.println(freememory);
-  Serial.print("activ:");
+  //Serial.print("activ:");
   //Serial.println(current_activity);
-  Serial.print("conftelem:");
+  //Serial.print("conftelem:");
   //Serial.println(configuration.telemetry);
-  Serial.print("baud");
+  //Serial.print("baud");
   //Serial.println(configuration.baudrate);
-  Serial.print("lat=");
-  Serial.println(uavPosition.latitude,7);///10000000.0
-  Serial.print("lon=");
-  Serial.println(uavPosition.longitud,7);
-  Serial.print("alt=");
-  Serial.println(uavPosition.altitude);
-  Serial.print("rel_alt=");
+  //Serial.print("lat=");
+  //Serial.println(uav.latitude,7);///10000000.0
+  //Serial.print("lon=");
+  //Serial.println(uav.longitud,7);
+  //Serial.print("alt=");
+  //Serial.println(uav.altitude);
+  //Serial.print("rel_alt=");
   //Serial.println(rel_alt);
   //Serial.print(uav_groundspeed);
   //Serial.println(uav_groundspeed);
-  Serial.print("dst=");
+  //Serial.print("dst=");
   //Serial.println(home_dist);
-  Serial.print("El:");
+  //Serial.print("El:");
   //Serial.println(Elevation);
-  Serial.print("Be:");
+  //Serial.print("Be:");
   //Serial.println(Bearing);
-  Serial.print("H Be:");
+  //Serial.print("H Be:");
   //Serial.println(home_bearing);
-  Serial.print("uav_fix_type=");
+  //Serial.print("uav_fix_type=");
   //Serial.println(uav_fix_type);
-  Serial.print("uav_satellites_visible=");
+  //Serial.print("uav_satellites_visible=");
   //Serial.println(uav_satellites_visible);
-  Serial.print("pitch:");
+  //Serial.print("pitch:");
   //Serial.println(uav_pitch);
-  Serial.print("roll:");
+  //Serial.print("roll:");
   //Serial.println(uav_roll);
-  Serial.print("yaw:");
+  //Serial.print("yaw:");
   //Serial.println(uav_heading);
-  Serial.print("rbat:");
+  //Serial.print("rbat:");
   //Serial.println(uav_bat);
-  Serial.print("amp:");
+  //Serial.print("amp:");
   //Serial.println(uav_amp);
-  Serial.print("rssi:");
+  //Serial.print("rssi:");
   //Serial.println(uav_rssi);
-  Serial.print("aspeed:");
+  //Serial.print("aspeed:");
   //Serial.println(uav_airspeed);
-  Serial.print("armed:");
+  //Serial.print("armed:");
   //Serial.println(uav_arm);
-  Serial.print("fs:");
+  //Serial.print("fs:");
   //Serial.println(uav_failsafe);
-  Serial.print("fmode:");
+  //Serial.print("fmode:");
   //Serial.println(uav_flightmode);
-  Serial.print("armfsmode");
+  //Serial.print("armfsmode");
   //Serial.println(ltm_armfsmode);
 }
 #endif
