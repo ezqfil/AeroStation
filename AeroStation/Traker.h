@@ -1,9 +1,9 @@
 #ifndef _AS_TRAKER_H_
 #define _AS_TRAKER_H_
 
-float        lonScaleDown=0.0;
-uint32_t home_dist;
-float _uavDist=0.0;
+//float        lonScaleDown=0.0;
+//uint32_t home_dist;
+//float _uavDist=0.0;
 Servo Pam;
 Servo Tilt;
 
@@ -11,10 +11,12 @@ Servo Tilt;
 typedef struct {
   float bearing;
   float elevation;
+  boolean hold;
 } 
 t_TRAKER_DATA;
 t_TRAKER_DATA traker = {
-  0,0};
+  0,0,0};
+  
 
 void initializeTraker()
 {
@@ -70,6 +72,8 @@ void updatePosition()
     SERIAL_PRINTLN(home.distance3d);
     SERIAL_PRINT("elevation: ");
     SERIAL_PRINTLN( traker.elevation);
+    SERIAL_PRINT("HOLD: ");
+    SERIAL_PRINTLN( traker.hold);
 #endif
 
     Pam.write(traker.bearing);

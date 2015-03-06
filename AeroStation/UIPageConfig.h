@@ -57,40 +57,62 @@ void smnServos(){
   }
   else if(uiStatus.action==BTN_MENU){
     uiStatus.event = mnuConfig;
+  }//20382
+  else if(uiStatus.action==BTN_MINUS) {
+    change=true;
+    if(uiStatus.state== 1){
+      cnf.pan_minpwm--;
+    }   
+    else if(uiStatus.state==2 ){
+      cnf.pan_maxpwm--;
+    }   
+    else if(uiStatus.state==3){
+      cnf.pan_minangle--;
+    }   
+    else if(uiStatus.state==4 ){
+      cnf.tilt_maxangle--;
+    }   
+    else if(uiStatus.state==5){
+      cnf.tilt_minpwm--;
+    } 
+    else if(uiStatus.state==6 ){
+      cnf.tilt_maxpwm--;
+    }   
+    else if(uiStatus.state==7){
+      cnf.tilt_minangle--;
+    }   
+    else if(uiStatus.state==8 ){
+      cnf.tilt_maxangle--;
+    } 
   }
-  else if(uiStatus.state==1 && uiStatus.action==BTN_MINUS){
-    cnf.pan_minpwm--;
+  else if(uiStatus.action==BTN_PLUS) {
     change=true;
-  } 
-  else if(uiStatus.state==1 && uiStatus.action==BTN_PLUS){
-    cnf.pan_minpwm++;
-    change=true;
-  } 
-  else if(uiStatus.state==2 && uiStatus.action==BTN_MINUS){
-    cnf.pan_maxpwm--;
-    change=true;
-  } 
-  else if(uiStatus.state==2 && uiStatus.action==BTN_PLUS){
-    cnf.pan_maxpwm++;
-    change=true;
-  } 
-  else if(uiStatus.state==3 && uiStatus.action==BTN_MINUS){
-    cnf.pan_minangle--;
-    change=true;
-  } 
-  else if(uiStatus.state==3 && uiStatus.action==BTN_PLUS){
-    cnf.pan_minangle++;
-    change=true;
-  } //16906
-  else if(uiStatus.state==4 && uiStatus.action==BTN_MINUS){
-    cnf.pan_maxangle--;
-    change=true;
-  } 
-  else if(uiStatus.state==4 && uiStatus.action==BTN_PLUS){
-    cnf.pan_maxangle++;
-    change=true;
-  }  
-  //16636
+    if(uiStatus.state==1){
+      cnf.pan_minpwm++;
+    } 
+    else if(uiStatus.state==2 ){
+      cnf.pan_maxpwm++;
+    } 
+    else if(uiStatus.state==3 ){
+      cnf.pan_minangle++;
+    } //16906
+    else if(uiStatus.state==4 ){
+      cnf.pan_maxangle++;
+    }
+    else if(uiStatus.state==5 ){
+      cnf.tilt_minpwm++;
+    } 
+    else if(uiStatus.state==6 ){
+      cnf.tilt_maxpwm++;
+    } 
+    else if(uiStatus.state==7 ){
+      cnf.tilt_minangle++;
+    } //16906
+    else if(uiStatus.state==8 ){
+      cnf.tilt_maxangle++;
+    }  
+  }
+
   if(change) {
     if(uiStatus.state<5){
       SERIAL_PRINTLN("PAN     MIN    MAX ");
@@ -165,31 +187,50 @@ void mnuConfig(){
   else if(uiStatus.action==BTN_PLUS && uiStatus.state<6){
     uiStatus.state++;
     //uiStatus.state = constrain(uiStatus.state,1,6);
+  }else if(uiStatus.action==BTN_OK && uiStatus.state==2){
+    traker.hold=~traker.hold;
+    uiStatus.statePrevius=-1;
+    //uiStatus.state = constrain(uiStatus.state,1,6);
   } 
 
   if(uiStatus.state!=uiStatus.statePrevius) {
+    char* strHold[ ]={"Antenna Hold on",
+  "Antenna Hold off"};
     if(uiStatus.state==1){
       SERIAL_PRINTLN("1 -> Set Home");
-      SERIAL_PRINTLN("2    Hold Antenna");
-      SERIAL_PRINTLN("3    Servos ");
+      SERIAL_PRINT("2    Antenna Hold ");
+      if(traker.hold)
+        SERIAL_PRINTLN("OFF");
+      else
+        SERIAL_PRINTLN("ON");
+      SERIAL_PRINTLN("3    PAM/TiLT ");
       SERIAL_PRINTLN("4    Reset configuration");
     } 
     else if(uiStatus.state==2){
       SERIAL_PRINTLN("1    Set Home");
-      SERIAL_PRINTLN("2 -> Hold Antenna");
-      SERIAL_PRINTLN("3    Servos ");
+      SERIAL_PRINT("2 -> Antenna Hold ");
+      if(traker.hold)
+        SERIAL_PRINTLN("OFF");
+      else
+        SERIAL_PRINTLN("ON");
+      SERIAL_PRINTLN("3    PAM/TiLT ");
       SERIAL_PRINTLN("4    Reset configuration");
     } 
     else if(uiStatus.state==3){
       SERIAL_PRINTLN("1    Set Home");
-      SERIAL_PRINTLN("2    Hold Antenna");
-      SERIAL_PRINTLN("3 -> Servos ");
+      SERIAL_PRINT("2    Antenna Hold ");
+      if(traker.hold)
+        SERIAL_PRINTLN("OFF");
+      else
+        SERIAL_PRINTLN("ON");
+      SERIAL_PRINTLN("3 -> PAM/TiLT ");
       SERIAL_PRINTLN("4    Reset configuration");
     } 
     else if(uiStatus.state==4){
       SERIAL_PRINTLN("1    Set Home");
-      SERIAL_PRINTLN("2    Hold Antenna");
-      SERIAL_PRINTLN("3    Servos ");
+      SERIAL_PRINT("2    ");
+      SERIAL_PRINTLN(strHold[traker.hold]);
+      SERIAL_PRINTLN("3    PAM/TiLT ");
       SERIAL_PRINTLN("4 -> Reset configuration");
     } 
     else if(uiStatus.state==5){
@@ -232,6 +273,15 @@ void mnuConfig(){
 }
 
 #endif
+
+
+
+
+
+
+
+
+
 
 
 
