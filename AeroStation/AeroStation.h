@@ -164,8 +164,12 @@ void writeEEPROM(unsigned int address, int value) {
   SERIAL_PRINTLN(value, HEX);
 #endif
   cli();
-  EEPROM.write(address,  ((value >> 8*0) & 0xFF));
-  EEPROM.write(address+1, ((value >> 8*1) & 0xFF));
+  //EEPROM.write(address,  ((value >> 8*0) & 0xFF));
+  //EEPROM.write(address+1, ((value >> 8*1) & 0xFF));
+  const byte* p = (const byte*)(const void*)&value;
+  for (int i = 0; i < sizeof(value); i++) {
+    EEPROM.write(address++, *p++);
+  }
   sei();
 }
 
@@ -180,12 +184,12 @@ void writeEEPROM( unsigned int address, long value) {
   SERIAL_PRINT(value);
   SERIAL_PRINT(" 0x");
   SERIAL_PRINTLN(value, HEX);
-#endif
+#endif//20158
   cli();
-  EEPROM.write(address,  ((value >> 8*0) & 0xFF));
-  EEPROM.write(address+1, ((value >> 8*1) & 0xFF));
-  EEPROM.write(address+2, ((value >> 8*2) & 0xFF));
-  EEPROM.write(address+3, ((value >> 8*3) & 0xFF));
+  const byte* p = (const byte*)(const void*)&value;
+  for (int i = 0; i < sizeof(value); i++) {
+    EEPROM.write(address++, *p++);
+  }
   sei();
 }
 
@@ -217,9 +221,9 @@ void readEEPROM(unsigned int address, int &value){
   SERIAL_PRINT(") ");
 #endif
   cli();
-    byte* p = (byte*)(void*)&value;
-    for (int i = 0; i < sizeof(value); i++)
-          *p++ = EEPROM.read(address++);
+  byte* p = (byte*)(void*)&value;
+  for (int i = 0; i < sizeof(value); i++)
+    *p++ = EEPROM.read(address++);
   sei();
 #ifdef DEBUG_EEPROM
   SERIAL_PRINT(" VALUE: ");
@@ -238,9 +242,10 @@ void readEEPROM(unsigned int address, long &value){
   SERIAL_PRINT(") ");
 #endif
   cli();//20172
-    byte* p = (byte*)(void*)&value;
-    for (int i = 0; i < sizeof(value); i++)
-          *p++ = EEPROM.read(address++);
+  byte* p = (byte*)(void*)&value;
+  for (int i = 0; i < sizeof(value); i++) {
+    *p++ = EEPROM.read(address++);
+  }
   sei();
 #ifdef DEBUG_EEPROM
   SERIAL_PRINT(" VALUE: ");
@@ -412,6 +417,8 @@ void debug() {
 #endif
 
 #endif
+
+
 
 
 
