@@ -12,6 +12,7 @@ typedef struct {
   float bearing;
   float elevation;
   boolean hold;
+  int test;
 } 
 t_TRAKER_DATA;
 t_TRAKER_DATA traker = {
