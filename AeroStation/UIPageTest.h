@@ -20,24 +20,35 @@ void mnuTelemetryTest(void){
       SERIAL_PRINTLN("2    LTM G Telemetry ");
       SERIAL_PRINTLN("3    LTM S Telemetry ");
       SERIAL_PRINTLN("4    LTM A Telemetry ");
+      SERIAL_PRINTLN("5    Servos");
     } 
     else if(uiStatus.state==2){
       SERIAL_PRINTLN("1    AQ Telemetry ");
       SERIAL_PRINTLN("2 -> LTM G Telemetry ");
       SERIAL_PRINTLN("3    LTM S Telemetry ");
       SERIAL_PRINTLN("4    LTM A Telemetry ");
+      SERIAL_PRINTLN("5    Servos");
     } 
     else if(uiStatus.state==3){
       SERIAL_PRINTLN("1    AQ Telemetry ");
       SERIAL_PRINTLN("2    LTM G Telemetry ");
       SERIAL_PRINTLN("3 -> LTM S Telemetry ");
       SERIAL_PRINTLN("4    LTM A Telemetry ");
+      SERIAL_PRINTLN("5    Servos");
     } 
     else if(uiStatus.state==4){
       SERIAL_PRINTLN("1    AQ Telemetry ");
       SERIAL_PRINTLN("2    LTM G Telemetry ");
       SERIAL_PRINTLN("3    LTM S Telemetry ");
       SERIAL_PRINTLN("4 -> LTM A Telemetry ");
+      SERIAL_PRINTLN("5    Servos");
+    } 
+    else if(uiStatus.state==5){
+      SERIAL_PRINTLN("1    AQ Telemetry ");
+      SERIAL_PRINTLN("2    LTM G Telemetry ");
+      SERIAL_PRINTLN("3    LTM S Telemetry ");
+      SERIAL_PRINTLN("4    LTM A Telemetry ");
+      SERIAL_PRINTLN("5 -> Servos");
     } 
     uiStatus.statePrevius=uiStatus.state;
   }
@@ -60,6 +71,11 @@ void mnuTelemetryTest(void){
       //    readTelemetryByte=0;
     } 
     else if(uiStatus.state==4){
+      initializeLTMATelemetry();
+      //slowTelemetryByteLTM = 255;
+      //s=3;
+      //    readTelemetryByte=0;
+    } else if(uiStatus.state==5){
       initializeLTMATelemetry();
       //slowTelemetryByteLTM = 255;
       //s=3;
