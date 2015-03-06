@@ -16,7 +16,7 @@ typedef struct {
 } 
 t_TRAKER_DATA;
 t_TRAKER_DATA traker = {
-  0,0,0};
+  0,0,0,0};
   
 
 void initializeTraker()
