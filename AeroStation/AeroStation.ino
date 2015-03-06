@@ -21,7 +21,7 @@
 #include "UIPageData.h"
 
 #ifdef TELEMETRY_TEST
-#include "UIPageTelemetryTest.h"
+#include "UIPageTest.h"
 #endif
 
 
