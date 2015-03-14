@@ -25,6 +25,7 @@ extern void mnuMain(void);
 extern void mnuConfig(void);	
 extern void mnuData(void);	
 extern void mnuTelemetryTest(void);
+extern void mnuTest(void);
 
 t_UI_STATUS uiStatus={
   0,
