@@ -43,11 +43,7 @@ void mnuMain(void)
       uiStatus.event = mnuConfig;
     }
     else if(uiStatus.state==3){
-#ifdef TELEMETRY_TEST
-      uiStatus.event = mnuTelemetryTest;
-#else
-      SERIAL_PRINTLN("Not implemented");
-#endif
+      uiStatus.event = mnuTest;
     } 
   }
   else if(uiStatus.action==BTN_MENU){
