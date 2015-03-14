@@ -20,9 +20,8 @@
 #include "UIPageConfig.h"
 #include "UIPageData.h"
 
-#ifdef TELEMETRY_TEST
 #include "UIPageTest.h"
-#endif
+
 
 
 
