@@ -20,19 +20,20 @@ int    lastpos;
 void send_messages(uint8_t *packet, uint8_t packet_size){
   byte slowTelemetryByte= 0;
 #ifdef DEBUG_SLOWTELEMETRY
-  SERIAL_PORT.println("=====SlowTelemetry MSG=====");
-  SERIAL_PRINT("TX: ");
+  DEBUG_PRINTLN("=====SlowTelemetry MSG=====");
+  DEBUG_PRINT("TX: ");
 #endif
   while (slowTelemetryByte < packet_size ) {
 #ifdef DEBUG_SLOWTELEMETRY
-    SERIAL_PRINT(packet[slowTelemetryByte],HEX);
-    SERIAL_PRINT("|");
+    DEBUG_PRINT(packet[slowTelemetryByte],HEX);
+    DEBUG_PRINT("|");
 #endif
     TELEMETRY_WRITE(packet[slowTelemetryByte++]);
+    
   }
-  TELEMETRY_PORT.flush();
+  TELEMETRY_PROXY_FLUSH();
 #ifdef DEBUG_SLOWTELEMETRY
-  SERIAL_PRINTLN("");
+  DEBUG_PRINTLN("");
 #endif
 }
 
@@ -93,7 +94,7 @@ void initializeAQTelemetry(){
 void send_LTM_Packet(uint8_t *LTPacket, uint8_t LTPacket_size)
 {
 #ifdef DEBUG_SLOWTELEMETRY
-  SERIAL_PRINTLN("LTM Protocol");
+  DEBUG_PRINTLN("LTM Protocol");
 #endif
   //calculate Checksum
   uint8_t LTCrc = 0x00;
