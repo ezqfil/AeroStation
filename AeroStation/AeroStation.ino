@@ -1,3 +1,4 @@
+
 #include <Arduino.h>
 #include <EEPROM.h>
 #include "UserConfiguration.h"
@@ -14,6 +15,7 @@
 #include "TelemetryTest.h"
 #endif
 
+#include "TelemetryProxy.h"
 #include "SlowTelemetry.h"
 #include <LiquidCrystal.h>
 #include "UIUserInterface.h"
@@ -25,11 +27,11 @@
 
 
 
-void initializeAeroStation(){
+void initializeAeroStation() {
   pinMode(LED_Green, OUTPUT);
   pinMode(LED_Yellow, OUTPUT);
   pinMode(LED_Red, OUTPUT);
-  SERIAL_BEGIN(BAUD);
+  DEBUG_BEGIN(BAUD);
 }
 
 
@@ -53,13 +55,13 @@ void setup()
  * (  20000); //  50hz
  * (  40000); //  25hz
  * ProcessTelem    processTelem  ( 100000); //  10Hz
- * 
+ *
  * Task *tasks[] = {&readGyro, &readAccel, &runDCM, &flightControls,   \
  * &readReceiver, &readBaro, &readCompass,            \
  * &processTelem, &readBattery};
- * 
+ *
  * TaskScheduler sched(tasks, NUM_TASKS(tasks));
- * 
+ *
  * sched.run();
  *******************************************************************/
 void loop()
@@ -91,6 +93,7 @@ void loop()
     // ================================================================
     if (frameCounter % TASK_10HZ == 0) {  //  10 Hz tasks
       updateUI();
+      updateProxyTelemetry();
       //debug output to usb Serial
 #ifdef DEBUG
       debug();
