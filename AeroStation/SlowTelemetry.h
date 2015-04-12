@@ -31,14 +31,17 @@
  *			   
  * Protocol details: 3 different frames, little endian.
  *   G Frame (GPS position) (2hz @ 1200 bauds , 5hz >= 2400 bauds): 18BYTES
- *    0x24 0x54 0x47 0xFF 0xFF 0xFF 0xFF 0xFF 0xFF 0xFF 0xFF 0xFF 0xFF 0xFF 0xFF 0xFF  0xFF   0xC0   
- *     $     T    G  --------LAT-------- -------LON---------  SPD --------ALT-------- SAT/FIX  CRC
+ *     0x24 0x54 0x47 0xFF 0xFF 0xFF 0xFF 0xFF 0xFF 0xFF 0xFF 0xFF 0xFF 0xFF 0xFF 0xFF  0xFF   0xC0   
+ *      $     T    G  --------LAT-------- -------LON---------  SPD --------ALT-------- SAT/FIX  CRC
  *   A Frame (Attitude) (5hz @ 1200bauds , 10hz >= 2400bauds): 10BYTES
  *     0x24 0x54 0x41 0xFF 0xFF 0xFF 0xFF 0xFF 0xFF 0xC0   
- *      $     T   A   --PITCH-- --ROLL--- -HEADING-  CRC
+ *      $     T    A  --PITCH-- --ROLL--- -HEADING-  CRC
  *   S Frame (Sensors) (2hz @ 1200bauds, 5hz >= 2400bauds): 11BYTES
  *     0x24 0x54 0x53 0xFF 0xFF  0xFF 0xFF    0xFF    0xFF      0xFF       0xC0     
- *      $     T   S   VBAT(mv)  Current(ma)   RSSI  AIRSPEED  ARM/FS/FMOD   CRC
+ *      $     T    S  VBAT(mv)  Current(ma)   RSSI  AIRSPEED  ARM/FS/FMOD   CRC
+ *   
+ *     0x24 0x54 0x   0XFF 0XFF
+ *      $     T   Q   CURSE
  * ################################################################################################################# */
 
 //AeroQuad SlowTelemetry
@@ -78,62 +81,64 @@ uint32_t readLong() {
 }
 
 void decode(){
-  telemetry_ok=true;
   readTelemetryByte=0;
-  //SERIAL_PORT.println("decode");
+  //DEBUG_PRINTLN("decode");
   if(telemetryBufferReader[0]=='A'){
-    SERIAL_PORT.println("AQ");
-    SERIAL_PORT.print("id1:");
-    SERIAL_PORT.println((char)readByte());
-    SERIAL_PORT.print("id2:");
-    SERIAL_PORT.println((char)readByte());
+    DEBUG_PRINTLN("AQ");
+    DEBUG_PRINT("id1:");
+    DEBUG_PRINTLN((char)readByte());
+    DEBUG_PRINT("id2:");
+    DEBUG_PRINTLN((char)readByte());
     uav.latitude=readLong();
     uav.longitud=readLong();
     uav.altitude=readShort()/10;
-    //SERIAL_PORT.println(readShort());      
-    SERIAL_PORT.print("course:");
-    SERIAL_PORT.println(readShort());      
-    SERIAL_PORT.print("heading:");
-    SERIAL_PORT.println(readShort());      
-    uav.speed=readByte();      
+    //DEBUG_PRINTLN(readShort());      
+    uav.course=readShort();      
+    uav.heading=readShort();
+    uav.speed=readByte(); 
+    uav.airspeed=uav.speed;   
     uav.rssi=readByte();      
     uav.bat_voltage=readByte();      
     uav.bat_current=readByte();      
     uav.bat_capacity=readShort();      
-    SERIAL_PORT.print("gpsinfo:");
-    SERIAL_PORT.println((unsigned short)readShort()>>12);     
+    DEBUG_PRINT("gpsinfo:");
+    DEBUG_PRINTLN((unsigned short)readShort()>>12);     
 
 #ifdef DEBUG_TELEMETRY
-    SERIAL_PORT.println("=====Telemetry=====");
-    SERIAL_PORT.print("latitude:"); // degrees/10000000
-    SERIAL_PORT.println(uav.latitude);
-    SERIAL_PORT.print("longitude:"); // degrees/10000000
-    SERIAL_PORT.println(uav.longitud);     
-    SERIAL_PORT.print("altitude: "); // x/10.0
-    SERIAL_PORT.println(uav.altitude); // x/10.0
-    SERIAL_PORT.print("speed:"); // x/36*1000
-    SERIAL_PORT.println(uav.speed); 
-    SERIAL_PORT.print("rssi:"); // x/36*1000
-    SERIAL_PORT.println(uav.rssi); 
-    SERIAL_PORT.print("bat voltage:"); // to 0.1V x*10
-    SERIAL_PORT.println(uav.bat_voltage); 
-    SERIAL_PORT.print("bat current:"); // to A x*100
-    SERIAL_PORT.println(uav.bat_current); 
-    SERIAL_PORT.print("capacity:"); // mAh x*1000
-    SERIAL_PORT.println(uav.bat_capacity); 
+    DEBUG_PRINTLN("=====Telemetry=====");
+    DEBUG_PRINT("latitude:"); // degrees/10000000
+    DEBUG_PRINTLN(uav.latitude);
+    DEBUG_PRINT("longitude:"); // degrees/10000000
+    DEBUG_PRINTLN(uav.longitud);     
+    DEBUG_PRINT("altitude: "); // x/10.0
+    DEBUG_PRINTLN(uav.altitude); // x/10.0
+    DEBUG_PRINT("course:");
+    DEBUG_PRINTLN(uav.course); 
+    DEBUG_PRINT("heading:");
+    DEBUG_PRINTLN(uav.heading); 
+    DEBUG_PRINT("speed:"); // x/36*1000
+    DEBUG_PRINTLN(uav.speed); 
+    DEBUG_PRINT("rssi:"); // x/36*1000
+    DEBUG_PRINTLN(uav.rssi); 
+    DEBUG_PRINT("bat voltage:"); // to 0.1V x*10
+    DEBUG_PRINTLN(uav.bat_voltage); 
+    DEBUG_PRINT("bat current:"); // to A x*100
+    DEBUG_PRINTLN(uav.bat_current); 
+    DEBUG_PRINT("capacity:"); // mAh x*1000
+    DEBUG_PRINTLN(uav.bat_capacity); 
 #endif
 
   } 
   else {
     char p;
-    SERIAL_PORT.println("TLM");
-    SERIAL_PORT.print("id1:");
-    SERIAL_PORT.println((char)readByte());
-    SERIAL_PORT.print("id2:");
-    SERIAL_PORT.println((char)readByte());
-    SERIAL_PORT.print("id3:");
+    DEBUG_PRINTLN("TLM");
+    DEBUG_PRINT("id1:");
+    DEBUG_PRINTLN((char)readByte());
+    DEBUG_PRINT("id2:");
+    DEBUG_PRINTLN((char)readByte());
+    DEBUG_PRINT("id3:");
     p= (char)readByte();
-    SERIAL_PORT.println(p);
+    DEBUG_PRINTLN(p);
     if(p=='G') {
       uav.latitude=readLong();
       uav.longitud=readLong();
@@ -141,38 +146,39 @@ void decode(){
       uav.altitude=readLong();
       p=readByte();// gps info
 #ifdef DEBUG_TELEMETRY
-      SERIAL_PORT.println("=====Telemetry=====");
-      SERIAL_PORT.print("latitud:");
-      SERIAL_PORT.println(uav.latitude);
-      SERIAL_PORT.print("longitud:");
-      SERIAL_PORT.println(uav.longitud);
-      SERIAL_PORT.print("speed:");
-      SERIAL_PORT.println(uav.speed);
-      SERIAL_PORT.print("altitud: ");
-      SERIAL_PORT.println(uav.altitude); 
-      SERIAL_PORT.println("gpsinfo:");
-      SERIAL_PORT.println(p>>2); 
-      SERIAL_PORT.println((p)&11);
+      DEBUG_PRINTLN("=====Telemetry=====");
+      DEBUG_PRINT("latitud:");
+      DEBUG_PRINTLN(uav.latitude);
+      DEBUG_PRINT("longitud:");
+      DEBUG_PRINTLN(uav.longitud);
+      DEBUG_PRINT("speed:");
+      DEBUG_PRINTLN(uav.speed);
+      DEBUG_PRINT("altitud: ");
+      DEBUG_PRINTLN(uav.altitude); 
+      DEBUG_PRINTLN("gpsinfo:");
+      DEBUG_PRINTLN(p>>2); 
+      DEBUG_PRINTLN((p)&11);
 #endif
     } 
     else if(p=='S') {
       uav.bat_voltage=readShort();
       uav.bat_current=readShort();
       uav.rssi=readByte();  
-      SERIAL_PORT.print("airspeed:");
-      SERIAL_PORT.println(readByte()); 
+      uav.airspeed=readByte(); 
       p=readByte(); 
 #ifdef DEBUG_TELEMETRY
-      SERIAL_PORT.print("voltage:");
-      SERIAL_PORT.println(uav.bat_voltage); 
-      SERIAL_PORT.print("amperaje:");
-      SERIAL_PORT.println(uav.bat_current); 
-      SERIAL_PORT.print("rssi:");
-      SERIAL_PORT.println(uav.rssi); 
-      SERIAL_PORT.println("info:");
-      SERIAL_PORT.println(p>>2);
-      SERIAL_PORT.println((p>>1)&1);
-      SERIAL_PORT.println((p)&1);
+      DEBUG_PRINT("voltage:");
+      DEBUG_PRINTLN(uav.bat_voltage); 
+      DEBUG_PRINT("amperaje:");
+      DEBUG_PRINTLN(uav.bat_current); 
+      DEBUG_PRINT("rssi:");
+      DEBUG_PRINTLN(uav.rssi);
+      DEBUG_PRINT("airspeed:");
+      DEBUG_PRINTLN(uav.airspeed); 
+      DEBUG_PRINTLN("info:");
+      DEBUG_PRINTLN(p>>2);
+      DEBUG_PRINTLN((p>>1)&1);
+      DEBUG_PRINTLN((p)&1);
 #endif
     } 
     else if(p=='A') {
@@ -180,17 +186,20 @@ void decode(){
       uav.roll=readShort();
       uav.heading=readShort();
 #ifdef DEBUG_TELEMETRY
-      SERIAL_PORT.println("=====Telemetry=====");
-      SERIAL_PORT.print("pitch:");
-      SERIAL_PORT.println(uav.pitch);
-      SERIAL_PORT.print("roll:");
-      SERIAL_PORT.println(uav.roll);
-      SERIAL_PORT.print("heading:");
-      SERIAL_PORT.println(uav.heading);
+      DEBUG_PRINTLN("=====Telemetry=====");
+      DEBUG_PRINT("pitch:");
+      DEBUG_PRINTLN(uav.pitch);
+      DEBUG_PRINT("roll:");
+      DEBUG_PRINTLN(uav.roll);
+      DEBUG_PRINT("heading:");
+      DEBUG_PRINTLN(uav.heading);
 #endif
     }
   }
   readTelemetryByte=0;
+  
+  telemetry_ok=true;
+  telemetry_proxy=true;
 }
 
 void updateSlowTelemetry () {
@@ -210,8 +219,8 @@ void updateSlowTelemetry () {
 #ifdef DEBUG_SLOWTELEMETRY
   boolean ln = false;
   if(TELEMETRY_AVAILABLE()){
-    SERIAL_PORT.println("=====SlowTelemetry MSG=====");
-    SERIAL_PORT.print("RX: ");
+    DEBUG_PRINTLN("=====SlowTelemetry MSG=====");
+    DEBUG_PRINT("RX: ");
     ln=true;
   }
 #endif
@@ -219,39 +228,39 @@ void updateSlowTelemetry () {
   while (TELEMETRY_AVAILABLE()) {
     c = TELEMETRY_READ();
 #ifdef DEBUG_SLOWTELEMETRY
-    SERIAL_PRINT(c,HEX);
-    SERIAL_PRINT("|");
+    DEBUG_PRINT(c,HEX);
+    DEBUG_PRINT("|");
 #endif
 
     if (c_state == IDLE) {
       if  (c=='$' || c=='A') {
-        //SERIAL_PORT.println("head 1|A");
+        //DEBUG_PRINTLN("head 1|A");
         readTelemetryByte=0;
         c_state = HEADER_START1;
         telemetryBufferReader[readTelemetryByte++]=c;
       } 
       //else {//no tiene sentido esto sobra
-      //  SERIAL_PORT.println("Que paso head1");
+      //  DEBUG_PRINTLN("Que paso head1");
       //}
     } 
     else if (c_state == HEADER_START1) {
       telemetryBufferReader[readTelemetryByte++]=c;
       if  (c=='T') {
         c_state = HEADER_START2;
-        //SERIAL_PORT.println("head t");
+        //DEBUG_PRINTLN("head t");
       } 
       else if  (c=='Q') {
-        //SERIAL_PORT.println("head q");
+        //DEBUG_PRINTLN("head q");
         c_state = HEADER_MSGTYPE;
         telemetryMsgSize = TELEMETRY_AQ_MSGSIZE_ECC;
       } 
       else {
-        //SERIAL_PORT.println("Procesar alerta sonora por contador");
+        //DEBUG_PRINTLN("Procesar alerta sonora por contador");
         c_state = IDLE;
       }
     } 
     else if (c_state == HEADER_START2) {
-      //SERIAL_PORT.println("head g");
+      //DEBUG_PRINTLN("head g");
       telemetryBufferReader[readTelemetryByte++]=c;
       switch (c) {
       case 'G':
@@ -267,7 +276,7 @@ void updateSlowTelemetry () {
         c_state = HEADER_MSGTYPE;
         break;
       default:
-        //SERIAL_PORT.println("Mensaje a desartar");
+        //DEBUG_PRINTLN("Mensaje a desartar");
         c_state = IDLE;
       } 
     } 
@@ -275,20 +284,20 @@ void updateSlowTelemetry () {
       if (readTelemetryByte<telemetryMsgSize){
         telemetryBufferReader[readTelemetryByte++]=c;        
         if (readTelemetryByte==telemetryMsgSize){
-          //SERIAL_PORT.println("End Message");
+          //DEBUG_PRINTLN("End Message");
           decode();
           readTelemetryByte=0;
           c_state = IDLE;
         } 
       } 
       //else {// no tiene sentido esta linea, sobra
-      //  SERIAL_PORT.println("Que paso");
+      //  DEBUG_PRINTLN("Que paso");
       //  c_state = IDLE;
       //}
     } 
     else { 
-      //SERIAL_PORT.print("byte perdido ");
-      //SERIAL_PORT.println(c);    
+      //DEBUG_PRINT("byte perdido ");
+      //DEBUG_PRINTLN(c);    
       // wrong checksum, drop packet
       c_state = IDLE; 
     }
@@ -297,7 +306,7 @@ void updateSlowTelemetry () {
 
 #ifdef DEBUG_SLOWTELEMETRY
   if (ln) {
-    SERIAL_PORT.println("");
+    DEBUG_PRINTLN("");
   }
 #endif
 
