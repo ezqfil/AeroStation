@@ -24,11 +24,11 @@ t_TRAKER_DATA traker = {
 
 void pathFinder(int bearing, int elevation) {
 #ifdef DEGUG_TRAKER
-  SERIAL_PRINTLN("=====FINDER=====");
-  SERIAL_PRINT("Bearing: ");
-  SERIAL_PRINTLN(bearing);
-  SERIAL_PRINT("Elevation: ");
-  SERIAL_PRINTLN(elevation);
+  DEBUG_PRINTLN("=====FINDER=====");
+  DEBUG_PRINT("Bearing: ");
+  DEBUG_PRINTLN(bearing);
+  DEBUG_PRINT("Elevation: ");
+  DEBUG_PRINTLN(elevation);
 #endif
   Pam.write(bearing);
   Tilt.write(elevation);
@@ -43,7 +43,14 @@ int servoTest () {
       break;
     case 1:
       if (traker.test_cnt > 180) {
-        pathFinder(traker.test_cnt, (360 - 33
+        pathFinder(traker.test_cnt, (360 - traker.test_cnt) / 6);
+        traker.test_cnt--;
+      }
+      else
+        traker.test_step = 2;
+      break;
+    case 2:
+      if (traker.test_cnt < 360) {
         pathFinder(traker.test_cnt, (360 - traker.test_cnt) / 6);
         traker.test_cnt++;
       }
@@ -75,10 +82,10 @@ int servoTest () {
       break;
   }
 #ifdef DEBUG_SERVOTEST
-  SERIAL_PRINT("STEP: ");
-  SERIAL_PRINTLN(traker.test_step);
-  SERIAL_PRINT("CNT: ");
-  SERIAL_PRINTLN(traker.test_cnt);
+  DEBUG_PRINT("STEP: ");
+  DEBUG_PRINTLN(traker.test_step);
+  DEBUG_PRINT("CNT: ");
+  DEBUG_PRINTLN(traker.test_cnt);
 #endif
   return traker.test_step;
 }
@@ -129,24 +136,24 @@ void updatePosition()
 
     traker.elevation = toDeg(atan((home.alt_relative) / home.distance));
 
-#ifdef DEGUG_TRAKER
-    SERIAL_PRINTLN("=====Traker=====");
-    SERIAL_PRINT("bearing: ");
-    SERIAL_PRINTLN(traker.bearing);
-    SERIAL_PRINT("distance: ");
-    SERIAL_PRINTLN(home.distance);
-    SERIAL_PRINT("distance 3d: ");
-    SERIAL_PRINTLN(home.distance3d);
-    SERIAL_PRINT("elevation: ");
-    SERIAL_PRINTLN( traker.elevation);
-    SERIAL_PRINT("HOLD: ");
-    SERIAL_PRINTLN( traker.hold);
+#ifdef DEBUG_TRAKER
+    DEBUG_PRINTLN("=====Traker=====");
+    DEBUG_PRINT("bearing: ");
+    DEBUG_PRINTLN(traker.bearing);
+    DEBUG_PRINT("distance: ");
+    DEBUG_PRINTLN(home.distance);
+    DEBUG_PRINT("distance 3d: ");
+    DEBUG_PRINTLN(home.distance3d);
+    DEBUG_PRINT("elevation: ");
+    DEBUG_PRINTLN( traker.elevation);
+    DEBUG_PRINT("HOLD: ");
+    DEBUG_PRINTLN( traker.hold);
 #endif
 
     pathFinder(traker.bearing, traker.elevation);
 
     telemetry_ok = false;
-  }
+  } 
 }
 
 #endif
