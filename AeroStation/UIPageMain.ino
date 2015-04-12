@@ -18,19 +18,19 @@ void mnuMain(void)
 
   if(uiStatus.state!=uiStatus.statePrevius) {
     if(uiStatus.state==1){
-      SERIAL_PRINTLN("1 -> Data");
-      SERIAL_PRINTLN("2    Config");
-      SERIAL_PRINTLN("3    Test");
+      DEBUG_PRINTLN("1 -> Data");
+      DEBUG_PRINTLN("2    Config");
+      DEBUG_PRINTLN("3    Test");
     } 
     else if(uiStatus.state==2){
-      SERIAL_PRINTLN("1    Data");
-      SERIAL_PRINTLN("2 -> Config");
-      SERIAL_PRINTLN("3    Test");
+      DEBUG_PRINTLN("1    Data");
+      DEBUG_PRINTLN("2 -> Config");
+      DEBUG_PRINTLN("3    Test");
     } 
     else if(uiStatus.state==3 ){
-      SERIAL_PRINTLN("1    Data");
-      SERIAL_PRINTLN("2    Config");
-      SERIAL_PRINTLN("3 -> Test");
+      DEBUG_PRINTLN("1    Data");
+      DEBUG_PRINTLN("2    Config");
+      DEBUG_PRINTLN("3 -> Test");
     }
     uiStatus.statePrevius=uiStatus.state;
   }

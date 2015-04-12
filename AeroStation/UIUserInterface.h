@@ -44,10 +44,10 @@ void initializeUI(){
 
 void readButton() {
   //byte s;
-  while(SERIAL_AVAILABLE()){
-    uiStatus.action=SERIAL_READ();
-    SERIAL_READ();
-   // SERIAL_READ();
+  while(DEBUG_AVAILABLE()){
+    uiStatus.action=DEBUG_READ();
+    DEBUG_READ();
+   // DEBUG_READ();
   }
 }
 

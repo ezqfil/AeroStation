@@ -10,15 +10,15 @@ void smnServoTest() {
 
   if (uiStatus.state != uiStatus.statePrevius) {
     if (uiStatus.state == 0) {
-      SERIAL_PRINTLN("Begin?");
+      DEBUG_PRINTLN("Begin?");
     } else if (uiStatus.state == 1) {
-      SERIAL_PRINTLN("Step 1-4");
+      DEBUG_PRINTLN("Step 1-4");
     } else if (uiStatus.state == 2) {
-      SERIAL_PRINTLN("Step 2-4");
+      DEBUG_PRINTLN("Step 2-4");
     } else if (uiStatus.state == 3) {
-      SERIAL_PRINTLN("Step 3-4");
+      DEBUG_PRINTLN("Step 3-4");
     } else if (uiStatus.state == 4) {
-      SERIAL_PRINTLN("Step 4-4");
+      DEBUG_PRINTLN("Step 4-4");
     }
     uiStatus.statePrevius = uiStatus.state;
   }
@@ -49,34 +49,34 @@ void smnTelemetryTest(void) {
 
   if (uiStatus.state != uiStatus.statePrevius) {
     if (uiStatus.state == 1) {
-      SERIAL_PRINTLN("1 -> AQ Telemetry ");
-      SERIAL_PRINTLN("2    LTM G Telemetry ");
-      SERIAL_PRINTLN("3    LTM S Telemetry ");
-      SERIAL_PRINTLN("4    LTM A Telemetry ");
+      DEBUG_PRINTLN("1 -> AQ Telemetry ");
+      DEBUG_PRINTLN("2    LTM G Telemetry ");
+      DEBUG_PRINTLN("3    LTM S Telemetry ");
+      DEBUG_PRINTLN("4    LTM A Telemetry ");
     }
     else if (uiStatus.state == 2) {
-      SERIAL_PRINTLN("1    AQ Telemetry ");
-      SERIAL_PRINTLN("2 -> LTM G Telemetry ");
-      SERIAL_PRINTLN("3    LTM S Telemetry ");
-      SERIAL_PRINTLN("4    LTM A Telemetry ");
+      DEBUG_PRINTLN("1    AQ Telemetry ");
+      DEBUG_PRINTLN("2 -> LTM G Telemetry ");
+      DEBUG_PRINTLN("3    LTM S Telemetry ");
+      DEBUG_PRINTLN("4    LTM A Telemetry ");
     }
     else if (uiStatus.state == 3) {
-      SERIAL_PRINTLN("1    AQ Telemetry ");
-      SERIAL_PRINTLN("2    LTM G Telemetry ");
-      SERIAL_PRINTLN("3 -> LTM S Telemetry ");
-      SERIAL_PRINTLN("4    LTM A Telemetry ");
+      DEBUG_PRINTLN("1    AQ Telemetry ");
+      DEBUG_PRINTLN("2    LTM G Telemetry ");
+      DEBUG_PRINTLN("3 -> LTM S Telemetry ");
+      DEBUG_PRINTLN("4    LTM A Telemetry ");
     }
     else if (uiStatus.state == 4) {
-      SERIAL_PRINTLN("1    AQ Telemetry ");
-      SERIAL_PRINTLN("2    LTM G Telemetry ");
-      SERIAL_PRINTLN("3    LTM S Telemetry ");
-      SERIAL_PRINTLN("4 -> LTM A Telemetry ");
+      DEBUG_PRINTLN("1    AQ Telemetry ");
+      DEBUG_PRINTLN("2    LTM G Telemetry ");
+      DEBUG_PRINTLN("3    LTM S Telemetry ");
+      DEBUG_PRINTLN("4 -> LTM A Telemetry ");
     }
     else if (uiStatus.state == 5) {
-      SERIAL_PRINTLN("1    AQ Telemetry ");
-      SERIAL_PRINTLN("2    LTM G Telemetry ");
-      SERIAL_PRINTLN("3    LTM S Telemetry ");
-      SERIAL_PRINTLN("4    LTM A Telemetry ");
+      DEBUG_PRINTLN("1    AQ Telemetry ");
+      DEBUG_PRINTLN("2    LTM G Telemetry ");
+      DEBUG_PRINTLN("3    LTM S Telemetry ");
+      DEBUG_PRINTLN("4    LTM A Telemetry ");
     }
     uiStatus.statePrevius = uiStatus.state;
   }
@@ -132,12 +132,12 @@ void mnuTest() {
 
   if (uiStatus.state != uiStatus.statePrevius) {
     if (uiStatus.state == 1) {
-      SERIAL_PRINTLN("1 -> Telemetry ");
-      SERIAL_PRINTLN("2    Servo ");
+      DEBUG_PRINTLN("1 -> Telemetry ");
+      DEBUG_PRINTLN("2    Servo ");
     }
     else if (uiStatus.state == 2) {
-      SERIAL_PRINTLN("1    Telemetry ");
-      SERIAL_PRINTLN("2 -> Servo ");
+      DEBUG_PRINTLN("1    Telemetry ");
+      DEBUG_PRINTLN("2 -> Servo ");
     }
     uiStatus.statePrevius = uiStatus.state;
   }
@@ -146,7 +146,7 @@ void mnuTest() {
 #ifdef TELEMETRY_TEST
       uiStatus.event = smnTelemetryTest;
 #else
-      SERIAL_PRINTLN("Not implemented");
+      DEBUG_PRINTLN("Not implemented");
 #endif
     }
     else if (uiStatus.state == 2 ) {

@@ -26,21 +26,21 @@ void smnBaudrate(){
   if(change){
     for(byte i = 0; i<4; i++) {
       if(cnf.baudrate==i){
-        SERIAL_PRINT(" -> ");
+        DEBUG_PRINT(" -> ");
       } 
       else {
-        SERIAL_PRINT("    ");
+        DEBUG_PRINT("    ");
       }
-      SERIAL_PRINTLN(baudrates[i]);
+      DEBUG_PRINTLN(baudrates[i]);
     }
     for(byte i = 4; i<8; i++) {
       if(cnf.baudrate==i){
-        SERIAL_PRINT(" -> ");
+        DEBUG_PRINT(" -> ");
       } 
       else {
-        SERIAL_PRINT("    ");
+        DEBUG_PRINT("    ");
       }
-      SERIAL_PRINTLN(baudrates[i]);
+      DEBUG_PRINTLN(baudrates[i]);
     }
   } 
 }
@@ -115,37 +115,37 @@ void smnServos(){
 
   if(change) {
     if(uiStatus.state<5){
-      SERIAL_PRINTLN("PAN     MIN    MAX ");
-      SERIAL_PRINT("PWM     ");
-      SERIAL_PRINT(cnf.pan_minpwm);
-      SERIAL_PRINT("    ");
+      DEBUG_PRINTLN("PAN     MIN    MAX ");
+      DEBUG_PRINT("PWM     ");
+      DEBUG_PRINT(cnf.pan_minpwm);
+      DEBUG_PRINT("    ");
       if(uiStatus.state>1)
-        SERIAL_PRINT(cnf.pan_maxpwm);
+        DEBUG_PRINT(cnf.pan_maxpwm);
 
-      SERIAL_PRINTLN();
-      SERIAL_PRINT("ANGLE   ");
+      DEBUG_PRINTLN();
+      DEBUG_PRINT("ANGLE   ");
       if(uiStatus.state>2)
-        SERIAL_PRINT(cnf.pan_minangle);
-      SERIAL_PRINT("      ");
+        DEBUG_PRINT(cnf.pan_minangle);
+      DEBUG_PRINT("      ");
       if(uiStatus.state>3)
-        SERIAL_PRINT(cnf.pan_maxangle);
-      SERIAL_PRINTLN();
+        DEBUG_PRINT(cnf.pan_maxangle);
+      DEBUG_PRINTLN();
     } 
     else if(uiStatus.state<9){
-      SERIAL_PRINTLN("TILT    MIN    MAX ");
-      SERIAL_PRINT("PWM     ");
-      SERIAL_PRINT(cnf.tilt_minpwm);
-      SERIAL_PRINT("    ");
+      DEBUG_PRINTLN("TILT    MIN    MAX ");
+      DEBUG_PRINT("PWM     ");
+      DEBUG_PRINT(cnf.tilt_minpwm);
+      DEBUG_PRINT("    ");
       if(uiStatus.state>5)
-        SERIAL_PRINT(cnf.tilt_maxpwm);
-      SERIAL_PRINTLN();
-      SERIAL_PRINT("ANGLE   ");
+        DEBUG_PRINT(cnf.tilt_maxpwm);
+      DEBUG_PRINTLN();
+      DEBUG_PRINT("ANGLE   ");
       if(uiStatus.state>6)
-        SERIAL_PRINT(cnf.tilt_minangle);
-      SERIAL_PRINT("      ");
+        DEBUG_PRINT(cnf.tilt_minangle);
+      DEBUG_PRINT("      ");
       if(uiStatus.state>7)
-        SERIAL_PRINT(cnf.tilt_maxangle);
-      SERIAL_PRINTLN();
+        DEBUG_PRINT(cnf.tilt_maxangle);
+      DEBUG_PRINTLN();
     } 
     else {
       uiStatus.event = mnuConfig;
@@ -158,12 +158,12 @@ void smnServos(){
 
 void smnSetHome(){
   if(uiStatus.state==0){
-    SERIAL_PRINTLN("Set Home");
-    SERIAL_PRINT(" Lat~"); 
-    SERIAL_PRINT(uav.latitude); 
-    SERIAL_PRINT(" Lon~"); 
-    SERIAL_PRINTLN(uav.longitud);
-    SERIAL_PRINT("->Confirm?");
+    DEBUG_PRINTLN("Set Home");
+    DEBUG_PRINT(" Lat~"); 
+    DEBUG_PRINT(uav.latitude); 
+    DEBUG_PRINT(" Lon~"); 
+    DEBUG_PRINTLN(uav.longitud);
+    DEBUG_PRINT("->Confirm?");
     uiStatus.state++;
   } 
   if( uiStatus.action==BTN_OK) {
@@ -197,49 +197,49 @@ void mnuConfig(){
     char* strHold[ ]={"Antenna Hold on",
   "Antenna Hold off"};
     if(uiStatus.state==1){
-      SERIAL_PRINTLN("1 -> Set Home");
-      SERIAL_PRINT("2    Antenna Hold ");
+      DEBUG_PRINTLN("1 -> Set Home");
+      DEBUG_PRINT("2    Antenna Hold ");
       if(traker.hold)
-        SERIAL_PRINTLN("OFF");
+        DEBUG_PRINTLN("OFF");
       else
-        SERIAL_PRINTLN("ON");
-      SERIAL_PRINTLN("3    PAM/TiLT ");
-      SERIAL_PRINTLN("4    Reset configuration");
+        DEBUG_PRINTLN("ON");
+      DEBUG_PRINTLN("3    PAM/TiLT ");
+      DEBUG_PRINTLN("4    Reset configuration");
     } 
     else if(uiStatus.state==2){
-      SERIAL_PRINTLN("1    Set Home");
-      SERIAL_PRINT("2 -> Antenna Hold ");
+      DEBUG_PRINTLN("1    Set Home");
+      DEBUG_PRINT("2 -> Antenna Hold ");
       if(traker.hold)
-        SERIAL_PRINTLN("OFF");
+        DEBUG_PRINTLN("OFF");
       else
-        SERIAL_PRINTLN("ON");
-      SERIAL_PRINTLN("3    PAM/TiLT ");
-      SERIAL_PRINTLN("4    Reset configuration");
+        DEBUG_PRINTLN("ON");
+      DEBUG_PRINTLN("3    PAM/TiLT ");
+      DEBUG_PRINTLN("4    Reset configuration");
     } 
     else if(uiStatus.state==3){
-      SERIAL_PRINTLN("1    Set Home");
-      SERIAL_PRINT("2    Antenna Hold ");
+      DEBUG_PRINTLN("1    Set Home");
+      DEBUG_PRINT("2    Antenna Hold ");
       if(traker.hold)
-        SERIAL_PRINTLN("OFF");
+        DEBUG_PRINTLN("OFF");
       else
-        SERIAL_PRINTLN("ON");
-      SERIAL_PRINTLN("3 -> PAM/TiLT ");
-      SERIAL_PRINTLN("4    Reset configuration");
+        DEBUG_PRINTLN("ON");
+      DEBUG_PRINTLN("3 -> PAM/TiLT ");
+      DEBUG_PRINTLN("4    Reset configuration");
     } 
     else if(uiStatus.state==4){
-      SERIAL_PRINTLN("1    Set Home");
-      SERIAL_PRINT("2    ");
-      SERIAL_PRINTLN(strHold[traker.hold]);
-      SERIAL_PRINTLN("3    PAM/TiLT ");
-      SERIAL_PRINTLN("4 -> Reset configuration");
+      DEBUG_PRINTLN("1    Set Home");
+      DEBUG_PRINT("2    ");
+      DEBUG_PRINTLN(strHold[traker.hold]);
+      DEBUG_PRINTLN("3    PAM/TiLT ");
+      DEBUG_PRINTLN("4 -> Reset configuration");
     } 
     else if(uiStatus.state==5){
-      SERIAL_PRINTLN("5 -> Save configuration");
-      SERIAL_PRINTLN("6    Telemetry Baudrate");
+      DEBUG_PRINTLN("5 -> Save configuration");
+      DEBUG_PRINTLN("6    Telemetry Baudrate");
     } 
     else if(uiStatus.state==6){
-      SERIAL_PRINTLN("5    Save configuration");
-      SERIAL_PRINTLN("6 -> Telemetry Baudrate");
+      DEBUG_PRINTLN("5    Save configuration");
+      DEBUG_PRINTLN("6 -> Telemetry Baudrate");
     } 
     uiStatus.statePrevius=uiStatus.state;
   }  
