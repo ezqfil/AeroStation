@@ -1,7 +1,6 @@
 #ifndef _AS_UITELEMETRYTEST_H_
 #define _AS_UITELEMETRYTEST_H_
 
-
 void smnServoTest() {
 
   if (uiStatus.state > 0 && uiStatus.state < 5) {

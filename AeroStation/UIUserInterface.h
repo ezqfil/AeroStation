@@ -12,7 +12,7 @@ typedef void (*FuncPtr)(void);
 typedef struct {
   byte state;
   byte action;
-  byte step;//notused
+  //byte step;//notused
   byte statePrevius;
 
   FuncPtr previusEvent; 
@@ -28,7 +28,7 @@ extern void mnuTelemetryTest(void);
 extern void mnuTest(void);
 
 t_UI_STATUS uiStatus={
-  0,
+//  0,
   0,0,
   0,mnuMain,mnuMain};  
 
