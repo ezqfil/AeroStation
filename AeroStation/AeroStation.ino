@@ -1,31 +1,27 @@
-
 #include <Arduino.h>
 #include <EEPROM.h>
 #include "UserConfiguration.h"
-#ifdef DEBUG
+
+#if defined DEBUG_LOG
 #include <MemoryFree.h>
 #endif
-#include "AeroStation.h"
 
+#include "AeroStation.h"
 #include <Servo.h>
 #include "Traker.h"
 
-#ifdef TELEMETRY_TEST
+#if defined  TELEMETRY_TEST
 #include <AQ_RSCode.h>
 #include "TelemetryTest.h"
 #endif
 
+#if defined(TELEMETRY_PROXY)
 #include "TelemetryProxy.h"
+#endif
+
 #include "SlowTelemetry.h"
 #include <LiquidCrystal.h>
 #include "UIUserInterface.h"
-#include "UIPageConfig.h"
-#include "UIPageData.h"
-
-#include "UIPageTest.h"
-
-
-
 
 void initializeAeroStation() {
   pinMode(LED_Green, OUTPUT);
@@ -41,6 +37,9 @@ void setup()
   readConfiguration();
   initializeTraker();
   initializeTelemetry();
+#if defined(TELEMETRY_PROXY)
+  initializeTelemetryProxy();
+#endif
   initializeUI();
   digitalWrite(LED_Green, HIGH);
   previousTime = micros();
@@ -93,10 +92,12 @@ void loop()
     // ================================================================
     if (frameCounter % TASK_10HZ == 0) {  //  10 Hz tasks
       updateUI();
+#if defined(TELEMETRY_PROXY)
       updateProxyTelemetry();
+#endif
       //debug output to usb Serial
-#ifdef DEBUG
-      debug();
+#if defined  DEBUG_LOG
+      debug_log();
 #endif
     }
 

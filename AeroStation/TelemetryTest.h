@@ -31,7 +31,7 @@ void send_messages(uint8_t *packet, uint8_t packet_size){
     TELEMETRY_WRITE(packet[slowTelemetryByte++]);
     
   }
-  TELEMETRY_PROXY_FLUSH();
+  TELEMETRY_FLUSH();
 #ifdef DEBUG_SLOWTELEMETRY
   DEBUG_PRINTLN("");
 #endif

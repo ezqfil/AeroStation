@@ -1,6 +1,9 @@
 #ifndef _AS_TRAKER_H_
 #define _AS_TRAKER_H_
 
+#define PAM_Pin 9
+#define TILT_Pin 10
+
 //float        lonScaleDown=0.0;
 //uint32_t home_dist;
 //float _uavDist=0.0;
@@ -114,7 +117,7 @@ void updatePosition()
 {
 
 
-  if (telemetry_ok) {
+  //if (telemetry_ok) {
 
     float lat1 = home.latitude / 1.0e7;
     float lon1 = home.longitud / 1.0e7;
@@ -152,8 +155,8 @@ void updatePosition()
 
     pathFinder(traker.bearing, traker.elevation);
 
-    telemetry_ok = false;
-  } 
+ //   telemetry_ok = false;
+ // } 
 }
 
 #endif

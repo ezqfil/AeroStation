@@ -23,7 +23,9 @@ union telemetryBuffer {
 }
 telemetryBuffer;
 
-
+void initializeTelemetryProxy() {
+  TELEMETRY_BEGIN(BAUD_TELEMETRY);
+}
 
 void send_proxy_messages(uint8_t *packet, uint8_t packet_size) {
   byte proxyTelemetryByte = 0;
@@ -67,5 +69,4 @@ void updateProxyTelemetry() {
     telemetry_proxy=false;
   }
 }
-
 #endif
