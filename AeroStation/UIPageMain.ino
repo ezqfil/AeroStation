@@ -1,6 +1,9 @@
 #ifndef _AS_UIMAIN_H_
 #define _AS_UIMAIN_H_
 
+#include "UIPageConfig.h"
+#include "UIPageData.h"
+#include "UIPageTest.h"
 
 void mnuMain(void)
 {//2268
