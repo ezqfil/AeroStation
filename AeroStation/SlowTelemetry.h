@@ -198,7 +198,7 @@ void decode(){
   }
   readTelemetryByte=0;
   
-  telemetry_ok=true;
+  //telemetry_ok=true;
   telemetry_proxy=true;
 }
 
@@ -228,7 +228,7 @@ void updateSlowTelemetry () {
   while (TELEMETRY_AVAILABLE()) {
     c = TELEMETRY_READ();
 #ifdef DEBUG_SLOWTELEMETRY
-    DEBUG_PRINT(c,HEX);
+    DEBUG_PRINTH(c,HEX);
     DEBUG_PRINT("|");
 #endif
 
