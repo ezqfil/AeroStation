@@ -7,15 +7,15 @@ void smnBaudrate(){
   if(uiStatus.state==0){
     uiStatus.state++;
     change=true;
-  }
-  else if(uiStatus.action==BTN_MINUS) {
+  }//20632
+  else if(uiStatus.action==BTN_MINUS && cnf.baudrate>0) {
     cnf.baudrate--;
-    cnf.baudrate = constrain( cnf.baudrate,0,7);
+   // cnf.baudrate = constrain( cnf.baudrate,0,7);
     change=true;
   } 
-  else if( uiStatus.action==BTN_PLUS) {
+  else if( uiStatus.action==BTN_PLUS && cnf.baudrate<7) {
     cnf.baudrate++;
-    cnf.baudrate = constrain( cnf.baudrate,0,7);
+   // cnf.baudrate = constrain( cnf.baudrate,0,7);
     change=true;
   }
   else if( uiStatus.action==BTN_OK || uiStatus.action==BTN_MENU) {
