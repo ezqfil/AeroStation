@@ -87,8 +87,8 @@ unsigned long deltaTime = 0;
 #else
 #define DEBUG_BEGIN(x)    0
 #define DEBUG_AVAILABLE() false
-#define DEBUG_PRINT(x) 
-#define DEBUG_PRINTH(x,y) 
+#define DEBUG_PRINT(x)
+#define DEBUG_PRINTH(x,y)
 #define DEBUG_PRINTLN(x)
 #define DEBUG_PRINTHLN(x,y)
 #define DEBUG_READ()      0
@@ -113,6 +113,11 @@ typedef struct {
   int   alt_relative;
   float distance;
   float distance3d;
+#if defined BATTERY_TEST
+  byte bat_voltage;
+  //byte bat_current;
+  //int  bat_capacity;
+#endif
 }
 t_HOME_DATA;
 
