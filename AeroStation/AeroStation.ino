@@ -10,6 +10,11 @@
 #include <Servo.h>
 #include "Traker.h"
 
+#if defined BATTERY_TEST
+#include "Battery.h"
+#endif
+
+
 #if defined  TELEMETRY_TEST
 #include <AQ_RSCode.h>
 #include "TelemetryTest.h"
@@ -20,6 +25,11 @@
 #endif
 
 #include "SlowTelemetry.h"
+
+//#if defined(RSSI_TRACKER)
+//#include "RSSI.h"
+//#endif
+
 #include <LiquidCrystal.h>
 #include "UIUserInterface.h"
 
@@ -37,6 +47,9 @@ void setup()
   readConfiguration();
   initializeTraker();
   initializeTelemetry();
+//#if defined(RSSI_TRACKER)
+//  initializeRSSI();
+//#endif
 #if defined(TELEMETRY_PROXY)
   initializeTelemetryProxy();
 #endif
@@ -78,6 +91,9 @@ void loop()
     // ================================================================
     if (frameCounter % TASK_100HZ == 0) {  //  100 Hz tasks
       updateSlowTelemetry();
+//#if defined(RSSI_TRACKER)
+//      updateRSSI();
+//#endif
     }
 
     // ================================================================
@@ -92,6 +108,9 @@ void loop()
     // ================================================================
     if (frameCounter % TASK_10HZ == 0) {  //  10 Hz tasks
       updateUI();
+#if defined BATTERY_TEST
+      measureBatteryVoltage();
+#endif
 #if defined(TELEMETRY_PROXY)
       updateProxyTelemetry();
 #endif
